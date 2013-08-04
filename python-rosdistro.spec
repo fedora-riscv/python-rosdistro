@@ -4,7 +4,7 @@
 
 Name:           python-rosdistro
 Version:        0.2.8
-Release:        2.20130602git%{shortcommit}%{?dist}
+Release:        3.20130602git%{shortcommit}%{?dist}
 Summary:        File format for managing ROS Distributions
 
 License:        BSD and MIT
@@ -52,6 +52,9 @@ rm -f doc/_build/html/.buildinfo
 %{python_sitelib}/%{realname}-%{version}-py?.?.egg-info
 
 %changelog
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.2.8-3.20130602git6e83551
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
 * Fri Jun 07 2013 Rich Mattes <richmattes@gmail.com> - 0.2.8-2.20130602git6e83551
 - Update BuildRequires to python2-devel
 - Remove cleanup of buildroot in install
