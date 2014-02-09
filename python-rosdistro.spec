@@ -12,6 +12,7 @@ URL:            http://www.ros.org/wiki/rosdistro
 Source0:        https://github.com/ros-infrastructure/%{realname}/archive/%{commit}/%{realname}-%{version}-%{shortcommit}.tar.gz
 
 BuildArch:      noarch
+BuildRequires:  PyYAML
 BuildRequires:  python2-devel
 BuildRequires:  python-catkin-sphinx
 BuildRequires:  git
