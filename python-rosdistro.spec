@@ -18,6 +18,7 @@ BuildArch:      noarch
 BuildRequires:  cmake
 BuildRequires:  PyYAML
 BuildRequires:  python-devel
+BuildRequires:  python-setuptools-devel
 BuildRequires:  python-docutils
 BuildRequires:  git
 
