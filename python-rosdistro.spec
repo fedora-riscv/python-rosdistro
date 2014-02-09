@@ -20,6 +20,7 @@ BuildRequires:  PyYAML
 BuildRequires:  python-devel
 BuildRequires:  python-setuptools-devel
 BuildRequires:  python-docutils
+BuildRequires:  python-sphinx
 BuildRequires:  git
 
 %description
