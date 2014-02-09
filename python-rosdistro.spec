@@ -1,10 +1,10 @@
-%global commit 6e835511a8051c341397b6a1b5e4a4b2cc9eb0f6
+%global commit dce80f72ae9c6a7372b798f354068de5496f66e2
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 %global realname rosdistro
 
 Name:           python-rosdistro
-Version:        0.2.8
-Release:        2.20130602git%{shortcommit}%{?dist}
+Version:        0.3.4
+Release:        1%{?dist}
 Summary:        File format for managing ROS Distributions
 
 License:        BSD and MIT
@@ -48,10 +48,14 @@ rm -f doc/_build/html/.buildinfo
 %doc README.md LICENSE.txt doc/_build/html
 %{_bindir}/rosdistro_build_cache
 %{_bindir}/rosdistro_reformat
+%{_bindir}/rosdistro_migrate_to_rep_141
 %{python_sitelib}/%{realname}
 %{python_sitelib}/%{realname}-%{version}-py?.?.egg-info
 
 %changelog
+* Sat Feb 08 2014 Rich Mattes <richmattes@gmail.com> - 0.3.4-1
+- Update to release 0.3.4
+
 * Fri Jun 07 2013 Rich Mattes <richmattes@gmail.com> - 0.2.8-2.20130602git6e83551
 - Update BuildRequires to python2-devel
 - Remove cleanup of buildroot in install
