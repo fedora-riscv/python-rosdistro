@@ -1,0 +1,13 @@
+diff -up ./doc/conf.py.sphinx ./doc/conf.py
+--- ./doc/conf.py.sphinx	2014-02-08 20:10:18.331606273 -0500
++++ ./doc/conf.py	2014-02-08 20:10:38.131891273 -0500
+@@ -25,8 +25,7 @@ from rosdistro._version import __version
+ # They can be extensions coming with Sphinx (named 'sphinx.ext.*') or your
+ # custom ones.
+ extensions = ['sphinx.ext.ifconfig', 'sphinx.ext.todo', 'sphinx.ext.graphviz',
+-              'sphinx.ext.intersphinx', 'sphinx.ext.doctest',
+-              'catkin_sphinx.ShLexer', 'catkin_sphinx.cmake']
++              'sphinx.ext.intersphinx', 'sphinx.ext.doctest']
+ todo_include_todos = True
+ 
+ # Add any paths that contain templates here, relative to this directory.

@@ -10,11 +10,15 @@ Summary:        File format for managing ROS Distributions
 License:        BSD and MIT
 URL:            http://www.ros.org/wiki/rosdistro
 Source0:        https://github.com/ros-infrastructure/%{realname}/archive/%{commit}/%{realname}-%{version}-%{shortcommit}.tar.gz
+# Python-sphinx is too old in epel for catkin-sphinx, remove it
+Patch0:         %{realname}-0.3.4-sphinx.patch
 
 BuildArch:      noarch
+
+BuildRequires:  cmake
 BuildRequires:  PyYAML
-BuildRequires:  python2-devel
-BuildRequires:  python-catkin-sphinx
+BuildRequires:  python-devel
+BuildRequires:  python-docutils
 BuildRequires:  git
 
 %description
@@ -33,6 +37,7 @@ local cache file, to speed up performance for the next query.
 %prep
 %setup -qn %{realname}-%{commit}
 sed -i 's|#!/usr/bin/env python||' src/rosdistro/external/appdirs.py
+%patch0 -p0 -b .sphinx
 
 %build
 %{__python} setup.py build
