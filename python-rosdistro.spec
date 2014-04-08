@@ -4,12 +4,13 @@
 
 Name:           python-rosdistro
 Version:        0.3.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        File format for managing ROS Distributions
 
 License:        BSD and MIT
 URL:            http://www.ros.org/wiki/rosdistro
 Source0:        https://github.com/ros-infrastructure/%{realname}/archive/%{commit}/%{realname}-%{version}-%{shortcommit}.tar.gz
+Patch0:         %{realname}-0.3.4-setuptools.patch
 
 BuildArch:      noarch
 BuildRequires:  PyYAML
@@ -32,6 +33,7 @@ local cache file, to speed up performance for the next query.
 
 %prep
 %setup -qn %{realname}-%{commit}
+%patch0 -p0
 sed -i 's|#!/usr/bin/env python||' src/rosdistro/external/appdirs.py
 
 %build
@@ -54,6 +56,9 @@ rm -f doc/_build/html/.buildinfo
 %{python_sitelib}/%{realname}-%{version}-py?.?.egg-info
 
 %changelog
+* Tue Apr 08 2014 Rich Mattes <richmattes@gmail.com> - 0.3.4-2
+- Depend on setuptools instead of distribute
+
 * Sat Feb 08 2014 Rich Mattes <richmattes@gmail.com> - 0.3.4-1
 - Update to release 0.3.4
 
