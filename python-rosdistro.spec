@@ -1,22 +1,28 @@
-%global commit dce80f72ae9c6a7372b798f354068de5496f66e2
+%global commit 1eb929bb2f715bd6cabf49bad165a31da5f5a589
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 %global realname rosdistro
 
 Name:           python-rosdistro
-Version:        0.3.4
-Release:        2%{?dist}
+Version:        0.3.5
+Release:        1%{?dist}
 Summary:        File format for managing ROS Distributions
 
 License:        BSD and MIT
 URL:            http://www.ros.org/wiki/rosdistro
 Source0:        https://github.com/ros-infrastructure/%{realname}/archive/%{commit}/%{realname}-%{version}-%{shortcommit}.tar.gz
-Patch0:         %{realname}-0.3.4-setuptools.patch
+Patch0:         %{realname}-0.3.5-argparse.patch
 
 BuildArch:      noarch
+
 BuildRequires:  PyYAML
+BuildRequires:  git
 BuildRequires:  python2-devel
 BuildRequires:  python-catkin-sphinx
-BuildRequires:  git
+Requires:       PyYAML
+Requires:       python-argparse
+Requires:       python-catkin_pkg
+Requires:       python-rospkg
+Requires:       python-setuptools
 
 %description
 The rosdistro tool allows you to get access to the full dependency tree and 
@@ -33,7 +39,7 @@ local cache file, to speed up performance for the next query.
 
 %prep
 %setup -qn %{realname}-%{commit}
-%patch0 -p0
+%patch0 -p1
 sed -i 's|#!/usr/bin/env python||' src/rosdistro/external/appdirs.py
 
 %build
@@ -56,6 +62,12 @@ rm -f doc/_build/html/.buildinfo
 %{python_sitelib}/%{realname}-%{version}-py?.?.egg-info
 
 %changelog
+* Sun Apr 27 2014 Scott K Logan <logans@cottsay.net> - 0.3.5-1
+- Update to release 0.3.5
+- Remove argparse from python dependency list
+- Added missing install requirements
+- Remove patch for setuptools (merged upstream)
+
 * Tue Apr 08 2014 Rich Mattes <richmattes@gmail.com> - 0.3.4-2
 - Depend on setuptools instead of distribute
 
