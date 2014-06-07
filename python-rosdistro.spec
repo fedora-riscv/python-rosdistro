@@ -4,7 +4,7 @@
 
 Name:           python-rosdistro
 Version:        0.3.5
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        File format for managing ROS Distributions
 
 License:        BSD and MIT
@@ -62,6 +62,9 @@ rm -f doc/_build/html/.buildinfo
 %{python_sitelib}/%{realname}-%{version}-py?.?.egg-info
 
 %changelog
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.3.5-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
 * Sun Apr 27 2014 Scott K Logan <logans@cottsay.net> - 0.3.5-1
 - Update to release 0.3.5
 - Remove argparse from python dependency list
