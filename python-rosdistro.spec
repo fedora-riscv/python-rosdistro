@@ -1,22 +1,60 @@
-%global commit dce80f72ae9c6a7372b798f354068de5496f66e2
+%if 0%{?fedora} > 12
+%global with_python3 1
+%else
+%{!?__python2: %global __python2 /usr/bin/python2}
+%{!?python2_sitelib: %global python2_sitelib %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print (get_python_lib())")}
+%endif
+
+%global commit 3b34fbcd28a67bab3c2d869e367bceac9bc32773
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 %global realname rosdistro
 
-Name:           python-rosdistro
-Version:        0.3.4
-Release:        2%{?dist}
+Name:           python-%{realname}
+Version:        0.3.7
+Release:        1%{?dist}
 Summary:        File format for managing ROS Distributions
 
 License:        BSD and MIT
 URL:            http://www.ros.org/wiki/rosdistro
 Source0:        https://github.com/ros-infrastructure/%{realname}/archive/%{commit}/%{realname}-%{version}-%{shortcommit}.tar.gz
-Patch0:         %{realname}-0.3.4-setuptools.patch
 
 BuildArch:      noarch
+
 BuildRequires:  PyYAML
-BuildRequires:  python2-devel
-BuildRequires:  python-catkin-sphinx
 BuildRequires:  git
+BuildRequires:  python2-devel
+BuildRequires:  python-catkin_pkg
+BuildRequires:  python-catkin-sphinx
+BuildRequires:  python-rospkg
+BuildRequires:  python-setuptools
+%if 0%{?rhel} && 0%{?rhel} < 7
+BuildRequires:  python-nose1.1
+BuildRequires:  python-sphinx10
+%else
+BuildRequires:  python-nose
+BuildRequires:  python-sphinx
+%endif
+Requires:       PyYAML
+Requires:       python-argparse
+Requires:       python-catkin_pkg
+Requires:       python-rospkg
+Requires:       python-setuptools
+
+%if 0%{?with_python3}
+%package -n python3-%{realname}
+Summary:        File format for managing ROS Distributions
+BuildRequires:  python3-PyYAML
+BuildRequires:  python3-catkin_pkg
+BuildRequires:  python3-devel
+BuildRequires:  python3-nose
+BuildRequires:  python3-rospkg
+BuildRequires:  python3-setuptools
+BuildRequires:  python3-sphinx
+Requires:       python3-PyYAML
+Requires:       python3-catkin_pkg
+Requires:       python3-rospkg
+Requires:       python3-setuptools
+%endif
 
 %description
 The rosdistro tool allows you to get access to the full dependency tree and 
@@ -31,31 +69,102 @@ depending on your own internet connection and the response times of Github.
 The rosdistro tool will always write the latest dependency information to a 
 local cache file, to speed up performance for the next query. 
 
+%if 0%{?with_python3}
+%description -n python3-%{realname}
+The rosdistro tool allows you to get access to the full dependency tree and
+the version control system information of all packages and repositories. To
+increase performance, the rosdistro tool will automatically look for a cache
+file on your local disk. If no cache file is found locally, it will try to
+download the latest cache file from the server. The cache files are only used
+to improve performance, and are not needed to get correct results. rosdistro
+will automatically go to Github to find any dependencies that are not part
+of the cache file. Note that operation without a cache file can be very slow,
+depending on your own internet connection and the response times of Github.
+The rosdistro tool will always write the latest dependency information to a
+local cache file, to speed up performance for the next query.
+%endif
+
 %prep
 %setup -qn %{realname}-%{commit}
-%patch0 -p0
 sed -i 's|#!/usr/bin/env python||' src/rosdistro/external/appdirs.py
 
-%build
-%{__python} setup.py build
-pushd doc
-make html
-popd
+%if 0%{?with_python3}
+rm -rf %{py3dir}
+cp -a . %{py3dir}
+find %{py3dir} -name '*.py' | xargs sed -i '1s|^#!python|#!%{__python3}|'
+%endif
 
-%install
-%{__python} setup.py install -O1 --skip-build --root %{buildroot}
+find -name '*.py' | xargs sed -i '1s|^#!python|#!%{__python2}|'
+
+%build
+%{__python2} setup.py build
+%if 0%{?rhel} && 0%{?rhel} < 7
+make -C doc html SPHINXBUILD=sphinx-1.0-build
+%else
+make -C doc html
+%endif
 rm -f doc/_build/html/.buildinfo
 
+%if 0%{?with_python3}
+pushd %{py3dir}
+%{__python3} setup.py build
+# TODO: Disabled until python3-catkin-sphinx is built
+#make -C doc html man SPHINXBUILD=sphinx-build-%{python3_version}
+#rm -f doc/_build/html/.buildinfo
+pushd build/scripts-%{python3_version}
+for f in *; do mv $f python3-$f; done
+popd
+popd
+%endif
+
+%install
+%{__python2} setup.py install --skip-build --root %{buildroot}
+
+%if 0%{?with_python3}
+pushd %{py3dir}
+%{__python3} setup.py install --skip-build --root %{buildroot}
+popd
+%endif
+
+%check
+%if 0%{?rhel} && 0%{?rhel} < 7
+PYTHONPATH=%{buildroot}%{python2_sitelib} nosetests1.1 -w test
+%else
+PYTHONPATH=%{buildroot}%{python2_sitelib} nosetests -w test
+%endif
+
+%if 0%{?with_python3}
+pushd %{py3dir}
+PYTHONPATH=%{buildroot}%{python3_sitelib} nosetests-%{python3_version} -w test
+popd
+%endif
  
 %files
 %doc README.md LICENSE.txt doc/_build/html
 %{_bindir}/rosdistro_build_cache
 %{_bindir}/rosdistro_reformat
 %{_bindir}/rosdistro_migrate_to_rep_141
-%{python_sitelib}/%{realname}
-%{python_sitelib}/%{realname}-%{version}-py?.?.egg-info
+%{python2_sitelib}/%{realname}
+%{python2_sitelib}/%{realname}-%{version}-py?.?.egg-info
+
+%if 0%{?with_python3}
+%files -n python3-%{realname}
+%doc README.md LICENSE.txt doc/_build/html
+%{_bindir}/python3-rosdistro_build_cache
+%{_bindir}/python3-rosdistro_reformat
+%{_bindir}/python3-rosdistro_migrate_to_rep_141
+%{python3_sitelib}/%{realname}
+%{python3_sitelib}/%{realname}-%{version}-py?.?.egg-info
+%endif
 
 %changelog
+* Sat Oct 25 2014 Scott K Logan <logans@cottsay.net> - 0.3.7-1
+- Update to release 0.3.7
+- Remove argparse patch (fixed upstream)
+- Fix sphinx dependency in el6
+- Add check section
+- Add python3 package
+
 * Tue Apr 08 2014 Rich Mattes <richmattes@gmail.com> - 0.3.4-2
 - Depend on setuptools instead of distribute
 
