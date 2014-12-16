@@ -5,12 +5,12 @@
 %{!?python2_sitelib: %global python2_sitelib %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print (get_python_lib())")}
 %endif
 
-%global commit 3b34fbcd28a67bab3c2d869e367bceac9bc32773
+%global commit 0ee02cbea2ca28c693652e2d1c95b68a97712758
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 %global realname rosdistro
 
 Name:           python-%{realname}
-Version:        0.3.7
+Version:        0.4.0
 Release:        1%{?dist}
 Summary:        File format for managing ROS Distributions
 
@@ -144,6 +144,7 @@ popd
 %{_bindir}/rosdistro_build_cache
 %{_bindir}/rosdistro_reformat
 %{_bindir}/rosdistro_migrate_to_rep_141
+%{_bindir}/rosdistro_migrate_to_rep_143
 %{python2_sitelib}/%{realname}
 %{python2_sitelib}/%{realname}-%{version}-py?.?.egg-info
 
@@ -153,11 +154,15 @@ popd
 %{_bindir}/python3-rosdistro_build_cache
 %{_bindir}/python3-rosdistro_reformat
 %{_bindir}/python3-rosdistro_migrate_to_rep_141
+%{_bindir}/python3-rosdistro_migrate_to_rep_143
 %{python3_sitelib}/%{realname}
 %{python3_sitelib}/%{realname}-%{version}-py?.?.egg-info
 %endif
 
 %changelog
+* Mon Dec 15 2014 Scott K Logan <logans@cottsay.net> - 0.4.0-1
+- Update to release 0.4.0
+
 * Sat Oct 25 2014 Scott K Logan <logans@cottsay.net> - 0.3.7-1
 - Update to release 0.3.7
 - Remove argparse patch (fixed upstream)
