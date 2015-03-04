@@ -5,18 +5,18 @@
 %{!?python2_sitelib: %global python2_sitelib %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print (get_python_lib())")}
 %endif
 
-%global commit 0ee02cbea2ca28c693652e2d1c95b68a97712758
+%global commit 2638bd489fe709d334404f22cd4137fb39d4a2d8
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 %global realname rosdistro
 
 Name:           python-%{realname}
-Version:        0.4.0
+Version:        0.4.1
 Release:        1%{?dist}
 Summary:        File format for managing ROS Distributions
 
 License:        BSD and MIT
 URL:            http://www.ros.org/wiki/rosdistro
-Source0:        https://github.com/ros-infrastructure/%{realname}/archive/%{commit}/%{realname}-%{version}-%{shortcommit}.tar.gz
+Source0:        https://github.com/ros-infrastructure/%{realname}/archive/%{commit}/%{realname}-%{commit}.tar.gz
 
 BuildArch:      noarch
 
@@ -160,6 +160,9 @@ popd
 %endif
 
 %changelog
+* Wed Mar 04 2015 Rich Mattes <richmattes@gmail.com> - 0.4.1-1
+- Update to release 0.4.1
+
 * Mon Dec 15 2014 Scott K Logan <logans@cottsay.net> - 0.4.0-1
 - Update to release 0.4.0
 
