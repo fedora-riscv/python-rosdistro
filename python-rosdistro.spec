@@ -5,12 +5,12 @@
 %{!?python2_sitelib: %global python2_sitelib %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print (get_python_lib())")}
 %endif
 
-%global commit 2638bd489fe709d334404f22cd4137fb39d4a2d8
+%global commit 98c556080721f961bbcd0d7a6b70ec7d8ed33454
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 %global realname rosdistro
 
 Name:           python-%{realname}
-Version:        0.4.1
+Version:        0.4.2
 Release:        1%{?dist}
 Summary:        File format for managing ROS Distributions
 
@@ -40,22 +40,6 @@ Requires:       python-catkin_pkg
 Requires:       python-rospkg
 Requires:       python-setuptools
 
-%if 0%{?with_python3}
-%package -n python3-%{realname}
-Summary:        File format for managing ROS Distributions
-BuildRequires:  python3-PyYAML
-BuildRequires:  python3-catkin_pkg
-BuildRequires:  python3-devel
-BuildRequires:  python3-nose
-BuildRequires:  python3-rospkg
-BuildRequires:  python3-setuptools
-BuildRequires:  python3-sphinx
-Requires:       python3-PyYAML
-Requires:       python3-catkin_pkg
-Requires:       python3-rospkg
-Requires:       python3-setuptools
-%endif
-
 %description
 The rosdistro tool allows you to get access to the full dependency tree and 
 the version control system information of all packages and repositories. To 
@@ -70,6 +54,20 @@ The rosdistro tool will always write the latest dependency information to a
 local cache file, to speed up performance for the next query. 
 
 %if 0%{?with_python3}
+%package -n python3-%{realname}
+Summary:        File format for managing ROS Distributions
+BuildRequires:  python3-PyYAML
+BuildRequires:  python3-catkin_pkg
+BuildRequires:  python3-devel
+BuildRequires:  python3-nose
+BuildRequires:  python3-rospkg
+BuildRequires:  python3-setuptools
+BuildRequires:  python3-sphinx
+Requires:       python3-PyYAML
+Requires:       python3-catkin_pkg
+Requires:       python3-rospkg
+Requires:       python3-setuptools
+
 %description -n python3-%{realname}
 The rosdistro tool allows you to get access to the full dependency tree and
 the version control system information of all packages and repositories. To
@@ -160,6 +158,9 @@ popd
 %endif
 
 %changelog
+* Wed May 27 2015 Rich Mattes <richmattes@gmail.com> - 0.4.2-1
+- Update to release 0.4.2 (#1207455)
+
 * Wed Mar 04 2015 Rich Mattes <richmattes@gmail.com> - 0.4.1-1
 - Update to release 0.4.1
 
