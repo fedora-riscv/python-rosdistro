@@ -11,7 +11,7 @@
 
 Name:           python-%{realname}
 Version:        0.4.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        File format for managing ROS Distributions
 
 License:        BSD and MIT
@@ -158,6 +158,9 @@ popd
 %endif
 
 %changelog
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
 * Wed May 27 2015 Rich Mattes <richmattes@gmail.com> - 0.4.2-1
 - Update to release 0.4.2 (#1207455)
 
