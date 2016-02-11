@@ -5,13 +5,13 @@
 %{!?python2_sitelib: %global python2_sitelib %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print (get_python_lib())")}
 %endif
 
-%global commit 98c556080721f961bbcd0d7a6b70ec7d8ed33454
+%global commit 39455f500c8f771939e0286672547a06e4d9c233
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 %global realname rosdistro
 
 Name:           python-%{realname}
-Version:        0.4.2
-Release:        4%{?dist}
+Version:        0.4.4
+Release:        1%{?dist}
 Summary:        File format for managing ROS Distributions
 
 License:        BSD and MIT
@@ -19,7 +19,7 @@ URL:            http://www.ros.org/wiki/rosdistro
 Source0:        https://github.com/ros-infrastructure/%{realname}/archive/%{commit}/%{realname}-%{commit}.tar.gz
 
 BuildArch:      noarch
-
+Provides:       python2-%{realname} = %{version}-%{release}
 BuildRequires:  PyYAML
 BuildRequires:  git
 BuildRequires:  python2-devel
@@ -158,6 +158,9 @@ popd
 %endif
 
 %changelog
+* Wed Feb 10 2016 Rich Mattes <richmattes@gmail.com> - 0.4.4-1
+- Update to release 0.4.4
+
 * Thu Feb 04 2016 Fedora Release Engineering <releng@fedoraproject.org> - 0.4.2-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 
