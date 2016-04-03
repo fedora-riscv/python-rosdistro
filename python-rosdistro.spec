@@ -5,12 +5,12 @@
 %{!?python2_sitelib: %global python2_sitelib %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print (get_python_lib())")}
 %endif
 
-%global commit 39455f500c8f771939e0286672547a06e4d9c233
+%global commit 2f75059f58e2235513a03a9f6ae3e497897d7b17
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 %global realname rosdistro
 
 Name:           python-%{realname}
-Version:        0.4.4
+Version:        0.4.7
 Release:        1%{?dist}
 Summary:        File format for managing ROS Distributions
 
@@ -143,6 +143,7 @@ popd
 %{_bindir}/rosdistro_reformat
 %{_bindir}/rosdistro_migrate_to_rep_141
 %{_bindir}/rosdistro_migrate_to_rep_143
+%{_bindir}/rosdistro_freeze_source
 %{python2_sitelib}/%{realname}
 %{python2_sitelib}/%{realname}-%{version}-py?.?.egg-info
 
@@ -153,11 +154,15 @@ popd
 %{_bindir}/python3-rosdistro_reformat
 %{_bindir}/python3-rosdistro_migrate_to_rep_141
 %{_bindir}/python3-rosdistro_migrate_to_rep_143
+%{_bindir}/python3-rosdistro_freeze_source
 %{python3_sitelib}/%{realname}
 %{python3_sitelib}/%{realname}-%{version}-py?.?.egg-info
 %endif
 
 %changelog
+* Sun Apr 03 2016 Rich Mattes <richmattes@gmail.com> - 0.4.7-1
+- Update to release 0.4.7 (rhbz#1304921)
+
 * Wed Feb 10 2016 Rich Mattes <richmattes@gmail.com> - 0.4.4-1
 - Update to release 0.4.4
 
