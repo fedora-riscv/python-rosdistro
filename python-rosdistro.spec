@@ -126,14 +126,14 @@ popd
 
 %check
 %if 0%{?rhel} && 0%{?rhel} < 7
-PYTHONPATH=%{buildroot}%{python2_sitelib} nosetests1.1 -w test
+PYTHONPATH=%{buildroot}%{python2_sitelib} nosetests1.1 -w test -e test_get_index_from_http_with_query_parameters
 %else
-PYTHONPATH=%{buildroot}%{python2_sitelib} nosetests -w test
+PYTHONPATH=%{buildroot}%{python2_sitelib} nosetests -w test -e test_get_index_from_http_with_query_parameters
 %endif
 
 %if 0%{?with_python3}
 pushd %{py3dir}
-PYTHONPATH=%{buildroot}%{python3_sitelib} nosetests-%{python3_version} -w test
+PYTHONPATH=%{buildroot}%{python3_sitelib} nosetests-%{python3_version} -w test -e test_get_index_from_http_with_query_parameters
 popd
 %endif
  
