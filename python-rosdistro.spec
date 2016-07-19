@@ -11,7 +11,7 @@
 
 Name:           python-%{realname}
 Version:        0.4.7
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        File format for managing ROS Distributions
 
 License:        BSD and MIT
@@ -160,6 +160,9 @@ popd
 %endif
 
 %changelog
+* Tue Jul 19 2016 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4.7-2
+- https://fedoraproject.org/wiki/Changes/Automatic_Provides_for_Python_RPM_Packages
+
 * Sun Apr 03 2016 Rich Mattes <richmattes@gmail.com> - 0.4.7-1
 - Update to release 0.4.7 (rhbz#1304921)
 
