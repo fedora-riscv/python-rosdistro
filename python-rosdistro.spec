@@ -7,19 +7,18 @@
 
 %global commit 2f75059f58e2235513a03a9f6ae3e497897d7b17
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
-%global realname rosdistro
+%global srcname rosdistro
 
-Name:           python-%{realname}
+Name:           python-%{srcname}
 Version:        0.4.7
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        File format for managing ROS Distributions
 
 License:        BSD and MIT
 URL:            http://www.ros.org/wiki/rosdistro
-Source0:        https://github.com/ros-infrastructure/%{realname}/archive/%{commit}/%{realname}-%{commit}.tar.gz
+Source0:        https://github.com/ros-infrastructure/%{srcname}/archive/%{commit}/%{srcname}-%{commit}.tar.gz
 
 BuildArch:      noarch
-Provides:       python2-%{realname} = %{version}-%{release}
 BuildRequires:  PyYAML
 BuildRequires:  git
 BuildRequires:  python2-devel
@@ -34,27 +33,44 @@ BuildRequires:  python-sphinx10
 BuildRequires:  python-nose
 BuildRequires:  python-sphinx
 %endif
+
+%description
+The rosdistro tool allows you to get access to the full dependency tree and
+the version control system information of all packages and repositories. To
+increase performance, the rosdistro tool will automatically look for a cache
+file on your local disk. If no cache file is found locally, it will try to
+download the latest cache file from the server. The cache files are only used
+to improve performance, and are not needed to get correct results. rosdistro
+will automatically go to Github to find any dependencies that are not part
+of the cache file. Note that operation without a cache file can be very slow,
+depending on your own internet connection and the response times of Github.
+The rosdistro tool will always write the latest dependency information to a
+local cache file, to speed up performance for the next query.
+
+%package -n python2-%{srcname}
+Summary: %{summary}
+%{?python_provide:%python_provide python2-%{srcname}}
 Requires:       PyYAML
-Requires:       python-argparse
 Requires:       python-catkin_pkg
 Requires:       python-rospkg
 Requires:       python-setuptools
 
-%description
-The rosdistro tool allows you to get access to the full dependency tree and 
-the version control system information of all packages and repositories. To 
-increase performance, the rosdistro tool will automatically look for a cache 
-file on your local disk. If no cache file is found locally, it will try to 
-download the latest cache file from the server. The cache files are only used 
-to improve performance, and are not needed to get correct results. rosdistro 
-will automatically go to Github to find any dependencies that are not part 
-of the cache file. Note that operation without a cache file can be very slow, 
-depending on your own internet connection and the response times of Github. 
-The rosdistro tool will always write the latest dependency information to a 
-local cache file, to speed up performance for the next query. 
+%description -n python2-%{srcname}
+The rosdistro tool allows you to get access to the full dependency tree and
+the version control system information of all packages and repositories. To
+increase performance, the rosdistro tool will automatically look for a cache
+file on your local disk. If no cache file is found locally, it will try to
+download the latest cache file from the server. The cache files are only used
+to improve performance, and are not needed to get correct results. rosdistro
+will automatically go to Github to find any dependencies that are not part
+of the cache file. Note that operation without a cache file can be very slow,
+depending on your own internet connection and the response times of Github.
+The rosdistro tool will always write the latest dependency information to a
+local cache file, to speed up performance for the next query.
+
 
 %if 0%{?with_python3}
-%package -n python3-%{realname}
+%package -n python3-%{srcname}
 Summary:        File format for managing ROS Distributions
 BuildRequires:  python3-PyYAML
 BuildRequires:  python3-catkin_pkg
@@ -68,7 +84,7 @@ Requires:       python3-catkin_pkg
 Requires:       python3-rospkg
 Requires:       python3-setuptools
 
-%description -n python3-%{realname}
+%description -n python3-%{srcname}
 The rosdistro tool allows you to get access to the full dependency tree and
 the version control system information of all packages and repositories. To
 increase performance, the rosdistro tool will automatically look for a cache
@@ -83,7 +99,7 @@ local cache file, to speed up performance for the next query.
 %endif
 
 %prep
-%setup -qn %{realname}-%{commit}
+%setup -qn %{srcname}-%{commit}
 sed -i 's|#!/usr/bin/env python||' src/rosdistro/external/appdirs.py
 
 %if 0%{?with_python3}
@@ -136,30 +152,33 @@ pushd %{py3dir}
 PYTHONPATH=%{buildroot}%{python3_sitelib} nosetests-%{python3_version} -w test -e test_get_index_from_http_with_query_parameters
 popd
 %endif
- 
-%files
+
+%files -n python2-%{srcname}
 %doc README.md LICENSE.txt doc/_build/html
 %{_bindir}/rosdistro_build_cache
 %{_bindir}/rosdistro_reformat
 %{_bindir}/rosdistro_migrate_to_rep_141
 %{_bindir}/rosdistro_migrate_to_rep_143
 %{_bindir}/rosdistro_freeze_source
-%{python2_sitelib}/%{realname}
-%{python2_sitelib}/%{realname}-%{version}-py?.?.egg-info
+%{python2_sitelib}/%{srcname}
+%{python2_sitelib}/%{srcname}-%{version}-py?.?.egg-info
 
 %if 0%{?with_python3}
-%files -n python3-%{realname}
+%files -n python3-%{srcname}
 %doc README.md LICENSE.txt doc/_build/html
 %{_bindir}/python3-rosdistro_build_cache
 %{_bindir}/python3-rosdistro_reformat
 %{_bindir}/python3-rosdistro_migrate_to_rep_141
 %{_bindir}/python3-rosdistro_migrate_to_rep_143
 %{_bindir}/python3-rosdistro_freeze_source
-%{python3_sitelib}/%{realname}
-%{python3_sitelib}/%{realname}-%{version}-py?.?.egg-info
+%{python3_sitelib}/%{srcname}
+%{python3_sitelib}/%{srcname}-%{version}-py?.?.egg-info
 %endif
 
 %changelog
+* Tue Sep 27 2016 Rich Mattes <richmattes@gmail.com> - 0.4.7-3
+- Remove python-argparse requirement
+
 * Tue Jul 19 2016 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4.7-2
 - https://fedoraproject.org/wiki/Changes/Automatic_Provides_for_Python_RPM_Packages
 
