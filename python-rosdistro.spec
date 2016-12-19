@@ -11,7 +11,7 @@
 
 Name:           python-%{srcname}
 Version:        0.4.7
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        File format for managing ROS Distributions
 
 License:        BSD and MIT
@@ -176,6 +176,9 @@ popd
 %endif
 
 %changelog
+* Mon Dec 19 2016 Miro Hrončok <mhroncok@redhat.com> - 0.4.7-4
+- Rebuild for Python 3.6
+
 * Tue Sep 27 2016 Rich Mattes <richmattes@gmail.com> - 0.4.7-3
 - Remove python-argparse requirement
 
