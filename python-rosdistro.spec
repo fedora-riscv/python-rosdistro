@@ -5,13 +5,13 @@
 %{!?python2_sitelib: %global python2_sitelib %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print (get_python_lib())")}
 %endif
 
-%global commit 2f75059f58e2235513a03a9f6ae3e497897d7b17
+%global commit 7f420cb031847988f51bd69905650a2e031adde6
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 %global srcname rosdistro
 
 Name:           python-%{srcname}
-Version:        0.4.7
-Release:        4%{?dist}
+Version:        0.5.0
+Release:        1%{?dist}
 Summary:        File format for managing ROS Distributions
 
 License:        BSD and MIT
@@ -72,6 +72,7 @@ local cache file, to speed up performance for the next query.
 %if 0%{?with_python3}
 %package -n python3-%{srcname}
 Summary:        File format for managing ROS Distributions
+%{?python_provide:%python_provide python3-%{srcname}}
 BuildRequires:  python3-PyYAML
 BuildRequires:  python3-catkin_pkg
 BuildRequires:  python3-devel
@@ -176,6 +177,9 @@ popd
 %endif
 
 %changelog
+* Wed Dec 21 2016 Rich Mattes <richmattes@gmail.com> - 0.5.0-1
+- Update to release 0.5.0 (rhbz#1388280)
+
 * Mon Dec 19 2016 Miro Hrončok <mhroncok@redhat.com> - 0.4.7-4
 - Rebuild for Python 3.6
 
