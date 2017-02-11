@@ -11,7 +11,7 @@
 
 Name:           python-%{srcname}
 Version:        0.5.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        File format for managing ROS Distributions
 
 License:        BSD and MIT
@@ -177,6 +177,9 @@ popd
 %endif
 
 %changelog
+* Sat Feb 11 2017 Fedora Release Engineering <releng@fedoraproject.org> - 0.5.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
+
 * Wed Dec 21 2016 Rich Mattes <richmattes@gmail.com> - 0.5.0-1
 - Update to release 0.5.0 (rhbz#1388280)
 
