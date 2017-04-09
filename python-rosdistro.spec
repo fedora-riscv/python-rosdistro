@@ -5,13 +5,13 @@
 %{!?python2_sitelib: %global python2_sitelib %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print (get_python_lib())")}
 %endif
 
-%global commit 7f420cb031847988f51bd69905650a2e031adde6
+%global commit f6a87bf67a39c64ed962c3f79d7b45256e0c14a7
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 %global srcname rosdistro
 
 Name:           python-%{srcname}
-Version:        0.5.0
-Release:        2%{?dist}
+Version:        0.6.2
+Release:        1%{?dist}
 Summary:        File format for managing ROS Distributions
 
 License:        BSD and MIT
@@ -177,6 +177,9 @@ popd
 %endif
 
 %changelog
+* Sun Apr 09 2017 Rich Mattes <richmattes@gmail.com> - 0.6.2-1
+- Update to release 0.6.2 (rhbz#1425644)
+
 * Sat Feb 11 2017 Fedora Release Engineering <releng@fedoraproject.org> - 0.5.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
 
