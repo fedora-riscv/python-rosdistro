@@ -11,7 +11,7 @@
 
 Name:           python-%{srcname}
 Version:        0.6.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        File format for managing ROS Distributions
 
 License:        BSD and MIT
@@ -19,19 +19,19 @@ URL:            http://www.ros.org/wiki/rosdistro
 Source0:        https://github.com/ros-infrastructure/%{srcname}/archive/%{commit}/%{srcname}-%{commit}.tar.gz
 
 BuildArch:      noarch
-BuildRequires:  PyYAML
+BuildRequires:  python2-pyyaml
 BuildRequires:  git
 BuildRequires:  python2-devel
-BuildRequires:  python-catkin_pkg
-BuildRequires:  python-catkin-sphinx
-BuildRequires:  python-rospkg
-BuildRequires:  python-setuptools
+BuildRequires:  python2-catkin_pkg
+BuildRequires:  python2-catkin-sphinx
+BuildRequires:  python2-rospkg
+BuildRequires:  python2-setuptools
 %if 0%{?rhel} && 0%{?rhel} < 7
 BuildRequires:  python-nose1.1
 BuildRequires:  python-sphinx10
 %else
-BuildRequires:  python-nose
-BuildRequires:  python-sphinx
+BuildRequires:  python2-nose
+BuildRequires:  python2-sphinx
 %endif
 
 %description
@@ -50,10 +50,10 @@ local cache file, to speed up performance for the next query.
 %package -n python2-%{srcname}
 Summary: %{summary}
 %{?python_provide:%python_provide python2-%{srcname}}
-Requires:       PyYAML
-Requires:       python-catkin_pkg
-Requires:       python-rospkg
-Requires:       python-setuptools
+Requires:       python2-pyyaml
+Requires:       python2-catkin_pkg
+Requires:       python2-rospkg
+Requires:       python2-setuptools
 
 %description -n python2-%{srcname}
 The rosdistro tool allows you to get access to the full dependency tree and
@@ -177,6 +177,10 @@ popd
 %endif
 
 %changelog
+* Wed Feb 28 2018 Iryna Shcherbina <ishcherb@redhat.com> - 0.6.2-4
+- Update Python 2 dependency declarations to new packaging standards
+  (See https://fedoraproject.org/wiki/FinalizingFedoraSwitchtoPython3)
+
 * Fri Feb 09 2018 Fedora Release Engineering <releng@fedoraproject.org> - 0.6.2-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
 
