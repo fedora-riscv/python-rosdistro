@@ -11,7 +11,7 @@
 
 Name:           python-%{srcname}
 Version:        0.6.2
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        File format for managing ROS Distributions
 
 License:        BSD and MIT
@@ -177,6 +177,9 @@ popd
 %endif
 
 %changelog
+* Tue Jun 19 2018 Miro Hrončok <mhroncok@redhat.com> - 0.6.2-5
+- Rebuilt for Python 3.7
+
 * Wed Feb 28 2018 Iryna Shcherbina <ishcherb@redhat.com> - 0.6.2-4
 - Update Python 2 dependency declarations to new packaging standards
   (See https://fedoraproject.org/wiki/FinalizingFedoraSwitchtoPython3)
