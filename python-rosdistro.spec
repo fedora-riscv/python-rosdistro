@@ -5,18 +5,16 @@
 %{!?python2_sitelib: %global python2_sitelib %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print (get_python_lib())")}
 %endif
 
-%global commit f6a87bf67a39c64ed962c3f79d7b45256e0c14a7
-%global shortcommit %(c=%{commit}; echo ${c:0:7})
 %global srcname rosdistro
 
 Name:           python-%{srcname}
-Version:        0.6.2
-Release:        6%{?dist}
+Version:        0.6.9
+Release:        1%{?dist}
 Summary:        File format for managing ROS Distributions
 
 License:        BSD and MIT
 URL:            http://www.ros.org/wiki/rosdistro
-Source0:        https://github.com/ros-infrastructure/%{srcname}/archive/%{commit}/%{srcname}-%{commit}.tar.gz
+Source0:        https://github.com/ros-infrastructure/%{srcname}/archive/%{version}/%{srcname}-%{version}.tar.gz
 
 BuildArch:      noarch
 BuildRequires:  python2-pyyaml
@@ -100,8 +98,10 @@ local cache file, to speed up performance for the next query.
 %endif
 
 %prep
-%setup -qn %{srcname}-%{commit}
-sed -i 's|#!/usr/bin/env python||' src/rosdistro/external/appdirs.py
+%setup -qn %{srcname}-%{version}
+sed -i 's|#!/usr/bin/env python||' \
+  src/rosdistro/external/appdirs.py \
+  src/rosdistro/freeze_source.py
 
 %if 0%{?with_python3}
 rm -rf %{py3dir}
@@ -177,6 +177,9 @@ popd
 %endif
 
 %changelog
+* Fri Sep 14 2018 Scott K Logan <logans@cottsay.net> - 0.6.9-1
+- Update to 0.6.9 (rhbz#1525745)
+
 * Sat Jul 14 2018 Fedora Release Engineering <releng@fedoraproject.org> - 0.6.2-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
 
