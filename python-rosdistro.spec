@@ -1,10 +1,11 @@
+%{?!_without_doc:%global with_doc 0%{?_with_doc:1} || 0%{?fedora:1} || 0%{?rhel} >= 7}
 %{?!_without_python2:%global with_python2 0%{?_with_python2:1} || 1}
 %{?!_without_python3:%global with_python3 0%{?_with_python3:1} || 0%{?fedora} > 12}
 
 %global srcname rosdistro
 
 Name:           python-%{srcname}
-Version:        0.7.0
+Version:        0.7.1
 Release:        1%{?dist}
 Summary:        File format for managing ROS Distributions
 
@@ -27,6 +28,7 @@ depending on your own internet connection and the response times of Github.
 The rosdistro tool will always write the latest dependency information to a
 local cache file, to speed up performance for the next query.
 
+%if 0%{?with_doc}
 %package doc
 Summary:        HTML documentation for '%{name}'
 BuildRequires:  python2-catkin-sphinx
@@ -34,6 +36,7 @@ BuildRequires:  python2-sphinx
 
 %description doc
 HTML documentation for the '%{srcname}' python module
+%endif # with_doc
 
 %if 0%{?with_python2}
 %package -n python2-%{srcname}
@@ -50,7 +53,10 @@ Requires:       python2-pyyaml
 Requires:       python2-catkin_pkg
 Requires:       python2-rospkg
 Requires:       python2-setuptools
+
+%if 0%{?fedora} && (0%{?with_doc})
 Recommends:     %{name}-doc = %{version}-%{release}
+%endif # fedora
 
 %description -n python2-%{srcname}
 The rosdistro tool allows you to get access to the full dependency tree and
@@ -81,7 +87,10 @@ Requires:       python%{python3_pkgversion}-PyYAML
 Requires:       python%{python3_pkgversion}-catkin_pkg
 Requires:       python%{python3_pkgversion}-rospkg
 Requires:       python%{python3_pkgversion}-setuptools
+
+%if 0%{?fedora} && (0%{?with_doc})
 Recommends:     %{name}-doc = %{version}-%{release}
+%endif # fedora
 
 %description -n python%{python3_pkgversion}-%{srcname}
 The rosdistro tool allows you to get access to the full dependency tree and
@@ -100,10 +109,6 @@ local cache file, to speed up performance for the next query.
 %prep
 %autosetup -p1 -n %{srcname}-%{version}
 
-sed -i 's|#!/usr/bin/env python||' \
-  src/rosdistro/external/appdirs.py \
-  src/rosdistro/freeze_source.py
-
 %build
 %if 0%{?with_python2}
 %py2_build
@@ -112,12 +117,14 @@ sed -i 's|#!/usr/bin/env python||' \
 %if 0%{?with_python3}
 %py3_build
 pushd build/scripts-%{python3_version}
-for f in *; do mv $f python3-$f; done
+for f in *; do mv $f python%{python3_pkgversion}-$f; done
 popd
 %endif # with_python3
 
-make -C doc html
-rm -f doc/_build/html/.buildinfo
+%if 0%{?with_doc}
+%make_build -C doc html
+rm doc/_build/html/.buildinfo
+%endif # with_doc
 
 %install
 %if 0%{?with_python2}
@@ -137,37 +144,42 @@ PYTHONPATH=%{buildroot}%{python2_sitelib} %{__python2} -m nose test -e test_get_
 PYTHONPATH=%{buildroot}%{python3_sitelib} %{__python3} -m nose test -e test_get_index_from_http_with_query_parameters -e test_manifest_providers*
 %endif # with_python3
 
+%if 0%{?with_doc}
 %files doc
 %license LICENSE.txt
 %doc doc/_build/html
+%endif # with_doc
 
 %if 0%{?with_python2}
 %files -n python2-%{srcname}
 %license LICENSE.txt
 %doc README.md
+%{python2_sitelib}/%{srcname}
+%{python2_sitelib}/%{srcname}-%{version}-py%{python2_version}.egg-info
 %{_bindir}/rosdistro_build_cache
 %{_bindir}/rosdistro_reformat
 %{_bindir}/rosdistro_migrate_to_rep_141
 %{_bindir}/rosdistro_migrate_to_rep_143
 %{_bindir}/rosdistro_freeze_source
-%{python2_sitelib}/%{srcname}
-%{python2_sitelib}/%{srcname}-%{version}-py%{python2_version}.egg-info
 %endif # with_python2
 
 %if 0%{?with_python3}
 %files -n python%{python3_pkgversion}-%{srcname}
 %license LICENSE.txt
 %doc README.md
-%{_bindir}/python3-rosdistro_build_cache
-%{_bindir}/python3-rosdistro_reformat
-%{_bindir}/python3-rosdistro_migrate_to_rep_141
-%{_bindir}/python3-rosdistro_migrate_to_rep_143
-%{_bindir}/python3-rosdistro_freeze_source
 %{python3_sitelib}/%{srcname}
 %{python3_sitelib}/%{srcname}-%{version}-py%{python3_version}.egg-info
+%{_bindir}/python%{python3_pkgversion}-rosdistro_build_cache
+%{_bindir}/python%{python3_pkgversion}-rosdistro_reformat
+%{_bindir}/python%{python3_pkgversion}-rosdistro_migrate_to_rep_141
+%{_bindir}/python%{python3_pkgversion}-rosdistro_migrate_to_rep_143
+%{_bindir}/python%{python3_pkgversion}-rosdistro_freeze_source
 %endif # with_python3
 
 %changelog
+* Fri Jan 11 2019 Scott K Logan <logans@cottsay.net> - 0.7.1-1
+- Update to 0.7.1
+
 * Tue Nov 06 2018 Scott K Logan <logans@cottsay.net> - 0.7.0-1
 - Update to 0.7.0
 - Conditional python2 package

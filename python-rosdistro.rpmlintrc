@@ -1,0 +1,2 @@
+# MANUAL PAGES
+addFilter(r'no-manual-page-for-binary (python3-)?rosdistro_.*')
