@@ -1,11 +1,11 @@
-%{?!_without_doc:%global with_doc 0%{?_with_doc:1} || 0%{?fedora:1} || 0%{?rhel} >= 7}
+%{?!_without_doc:%global with_doc 0%{?_with_doc:1} || !0%{?rhel} || 0%{?rhel} >= 7}
 %{?!_without_python2:%global with_python2 0%{?_with_python2:1} || 1}
-%{?!_without_python3:%global with_python3 0%{?_with_python3:1} || 0%{?fedora} > 12}
+%{?!_without_python3:%global with_python3 0%{?_with_python3:1} || !0%{?rhel}}
 
 %global srcname rosdistro
 
 Name:           python-%{srcname}
-Version:        0.7.1
+Version:        0.7.2
 Release:        1%{?dist}
 Summary:        File format for managing ROS Distributions
 
@@ -43,14 +43,14 @@ HTML documentation for the '%{srcname}' python module
 Summary:        %{summary}
 %{?python_provide:%python_provide python2-%{srcname}}
 BuildRequires:  git
-BuildRequires:  python2-pyyaml
 BuildRequires:  python2-devel
 BuildRequires:  python2-catkin_pkg
 BuildRequires:  python2-nose
+BuildRequires:  python2-pyyaml
 BuildRequires:  python2-rospkg
 BuildRequires:  python2-setuptools
-Requires:       python2-pyyaml
 Requires:       python2-catkin_pkg
+Requires:       python2-pyyaml
 Requires:       python2-rospkg
 Requires:       python2-setuptools
 
@@ -77,14 +77,14 @@ local cache file, to speed up performance for the next query.
 Summary:        %{summary}
 %{?python_provide:%python_provide python%{python3_pkgversion}-%{srcname}}
 BuildRequires:  git
-BuildRequires:  python%{python3_pkgversion}-PyYAML
 BuildRequires:  python%{python3_pkgversion}-catkin_pkg
 BuildRequires:  python%{python3_pkgversion}-devel
 BuildRequires:  python%{python3_pkgversion}-nose
+BuildRequires:  python%{python3_pkgversion}-PyYAML
 BuildRequires:  python%{python3_pkgversion}-rospkg
 BuildRequires:  python%{python3_pkgversion}-setuptools
-Requires:       python%{python3_pkgversion}-PyYAML
 Requires:       python%{python3_pkgversion}-catkin_pkg
+Requires:       python%{python3_pkgversion}-PyYAML
 Requires:       python%{python3_pkgversion}-rospkg
 Requires:       python%{python3_pkgversion}-setuptools
 
@@ -154,8 +154,8 @@ PYTHONPATH=%{buildroot}%{python3_sitelib} %{__python3} -m nose test -e test_get_
 %files -n python2-%{srcname}
 %license LICENSE.txt
 %doc README.md
-%{python2_sitelib}/%{srcname}
-%{python2_sitelib}/%{srcname}-%{version}-py%{python2_version}.egg-info
+%{python2_sitelib}/%{srcname}/
+%{python2_sitelib}/%{srcname}-%{version}-py%{python2_version}.egg-info/
 %{_bindir}/rosdistro_build_cache
 %{_bindir}/rosdistro_reformat
 %{_bindir}/rosdistro_migrate_to_rep_141
@@ -167,8 +167,8 @@ PYTHONPATH=%{buildroot}%{python3_sitelib} %{__python3} -m nose test -e test_get_
 %files -n python%{python3_pkgversion}-%{srcname}
 %license LICENSE.txt
 %doc README.md
-%{python3_sitelib}/%{srcname}
-%{python3_sitelib}/%{srcname}-%{version}-py%{python3_version}.egg-info
+%{python3_sitelib}/%{srcname}/
+%{python3_sitelib}/%{srcname}-%{version}-py%{python3_version}.egg-info/
 %{_bindir}/python%{python3_pkgversion}-rosdistro_build_cache
 %{_bindir}/python%{python3_pkgversion}-rosdistro_reformat
 %{_bindir}/python%{python3_pkgversion}-rosdistro_migrate_to_rep_141
@@ -177,6 +177,9 @@ PYTHONPATH=%{buildroot}%{python3_sitelib} %{__python3} -m nose test -e test_get_
 %endif # with_python3
 
 %changelog
+* Wed Jan 23 2019 Scott K Logan <logans@cottsay.net> - 0.7.2-1
+- Update to 0.7.2 (rhbz#1668955)
+
 * Fri Jan 11 2019 Scott K Logan <logans@cottsay.net> - 0.7.1-1
 - Update to 0.7.1
 
