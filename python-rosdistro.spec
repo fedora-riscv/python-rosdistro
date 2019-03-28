@@ -1,11 +1,10 @@
-%{?!_without_doc:%global with_doc 0%{?_with_doc:1} || !0%{?rhel} || 0%{?rhel} >= 7}
-%{?!_without_python2:%global with_python2 0%{?_with_python2:1} || 1}
-%{?!_without_python3:%global with_python3 0%{?_with_python3:1} || !0%{?rhel}}
+%{?!_without_python2:%global with_python2 0%{?_with_python2:1} || !(0%{?rhel} >= 8)}
+%{?!_without_python3:%global with_python3 0%{?_with_python3:1} || !0%{?rhel} || 0%{?rhel} >= 8}
 
 %global srcname rosdistro
 
 Name:           python-%{srcname}
-Version:        0.7.2
+Version:        0.7.3
 Release:        1%{?dist}
 Summary:        File format for managing ROS Distributions
 
@@ -28,20 +27,19 @@ depending on your own internet connection and the response times of Github.
 The rosdistro tool will always write the latest dependency information to a
 local cache file, to speed up performance for the next query.
 
-%if 0%{?with_doc}
+
 %package doc
 Summary:        HTML documentation for '%{name}'
-BuildRequires:  python2-catkin-sphinx
-BuildRequires:  python2-sphinx
+BuildRequires:  python%{python3_pkgversion}-catkin-sphinx
+BuildRequires:  python%{python3_pkgversion}-sphinx
 
 %description doc
 HTML documentation for the '%{srcname}' python module
-%endif # with_doc
+
 
 %if 0%{?with_python2}
 %package -n python2-%{srcname}
 Summary:        %{summary}
-%{?python_provide:%python_provide python2-%{srcname}}
 BuildRequires:  git
 BuildRequires:  python2-devel
 BuildRequires:  python2-catkin_pkg
@@ -49,13 +47,17 @@ BuildRequires:  python2-nose
 BuildRequires:  python2-pyyaml
 BuildRequires:  python2-rospkg
 BuildRequires:  python2-setuptools
+%{?python_provide:%python_provide python2-%{srcname}}
+
+%if %{undefined python_disable_dependency_generator}
 Requires:       python2-catkin_pkg
 Requires:       python2-pyyaml
 Requires:       python2-rospkg
 Requires:       python2-setuptools
+%endif # python_disable_dependency_generator
 
-%if 0%{?fedora} && (0%{?with_doc})
-Recommends:     %{name}-doc = %{version}-%{release}
+%if 0%{?fedora}
+Suggests:       %{name}-doc = %{version}-%{release}
 %endif # fedora
 
 %description -n python2-%{srcname}
@@ -72,10 +74,10 @@ The rosdistro tool will always write the latest dependency information to a
 local cache file, to speed up performance for the next query.
 %endif # with_python2
 
+
 %if 0%{?with_python3}
 %package -n python%{python3_pkgversion}-%{srcname}
 Summary:        %{summary}
-%{?python_provide:%python_provide python%{python3_pkgversion}-%{srcname}}
 BuildRequires:  git
 BuildRequires:  python%{python3_pkgversion}-catkin_pkg
 BuildRequires:  python%{python3_pkgversion}-devel
@@ -83,13 +85,17 @@ BuildRequires:  python%{python3_pkgversion}-nose
 BuildRequires:  python%{python3_pkgversion}-PyYAML
 BuildRequires:  python%{python3_pkgversion}-rospkg
 BuildRequires:  python%{python3_pkgversion}-setuptools
+%{?python_provide:%python_provide python%{python3_pkgversion}-%{srcname}}
+
+%if %{undefined python_disable_dependency_generator}
 Requires:       python%{python3_pkgversion}-catkin_pkg
 Requires:       python%{python3_pkgversion}-PyYAML
 Requires:       python%{python3_pkgversion}-rospkg
 Requires:       python%{python3_pkgversion}-setuptools
+%endif # python_disable_dependency_generator
 
-%if 0%{?fedora} && (0%{?with_doc})
-Recommends:     %{name}-doc = %{version}-%{release}
+%if 0%{?fedora}
+Suggests:       %{name}-doc = %{version}-%{release}
 %endif # fedora
 
 %description -n python%{python3_pkgversion}-%{srcname}
@@ -106,8 +112,10 @@ The rosdistro tool will always write the latest dependency information to a
 local cache file, to speed up performance for the next query.
 %endif # with_python3
 
+
 %prep
 %autosetup -p1 -n %{srcname}-%{version}
+
 
 %build
 %if 0%{?with_python2}
@@ -121,10 +129,10 @@ for f in *; do mv $f python%{python3_pkgversion}-$f; done
 popd
 %endif # with_python3
 
-%if 0%{?with_doc}
-%make_build -C doc html
+PYTHONPATH=$PWD/src \
+  %make_build -C doc html SPHINXBUILD=sphinx-build-%{python3_version}
 rm doc/_build/html/.buildinfo
-%endif # with_doc
+
 
 %install
 %if 0%{?with_python2}
@@ -135,20 +143,28 @@ rm doc/_build/html/.buildinfo
 %py3_install
 %endif # with_python3
 
+
 %check
 %if 0%{?with_python2}
-PYTHONPATH=%{buildroot}%{python2_sitelib} %{__python2} -m nose test -e test_get_index_from_http_with_query_parameters -e test_manifest_providers*
+PYTHONPATH=%{buildroot}%{python2_sitelib} \
+  %{__python2} -m nose \
+  -e test_get_index_from_http_with_query_parameters \
+  -e test_manifest_providers* \
+  test
 %endif # with_python2
 
 %if 0%{?with_python3}
-PYTHONPATH=%{buildroot}%{python3_sitelib} %{__python3} -m nose test -e test_get_index_from_http_with_query_parameters -e test_manifest_providers*
+PYTHONPATH=%{buildroot}%{python3_sitelib} \
+  %{__python3} -m nose \
+  -e test_get_index_from_http_with_query_parameters \
+  -e test_manifest_providers* \
+  test
 %endif # with_python3
 
-%if 0%{?with_doc}
+
 %files doc
 %license LICENSE.txt
 %doc doc/_build/html
-%endif # with_doc
 
 %if 0%{?with_python2}
 %files -n python2-%{srcname}
@@ -157,10 +173,10 @@ PYTHONPATH=%{buildroot}%{python3_sitelib} %{__python3} -m nose test -e test_get_
 %{python2_sitelib}/%{srcname}/
 %{python2_sitelib}/%{srcname}-%{version}-py%{python2_version}.egg-info/
 %{_bindir}/rosdistro_build_cache
-%{_bindir}/rosdistro_reformat
+%{_bindir}/rosdistro_freeze_source
 %{_bindir}/rosdistro_migrate_to_rep_141
 %{_bindir}/rosdistro_migrate_to_rep_143
-%{_bindir}/rosdistro_freeze_source
+%{_bindir}/rosdistro_reformat
 %endif # with_python2
 
 %if 0%{?with_python3}
@@ -170,13 +186,20 @@ PYTHONPATH=%{buildroot}%{python3_sitelib} %{__python3} -m nose test -e test_get_
 %{python3_sitelib}/%{srcname}/
 %{python3_sitelib}/%{srcname}-%{version}-py%{python3_version}.egg-info/
 %{_bindir}/python%{python3_pkgversion}-rosdistro_build_cache
-%{_bindir}/python%{python3_pkgversion}-rosdistro_reformat
+%{_bindir}/python%{python3_pkgversion}-rosdistro_freeze_source
 %{_bindir}/python%{python3_pkgversion}-rosdistro_migrate_to_rep_141
 %{_bindir}/python%{python3_pkgversion}-rosdistro_migrate_to_rep_143
-%{_bindir}/python%{python3_pkgversion}-rosdistro_freeze_source
+%{_bindir}/python%{python3_pkgversion}-rosdistro_reformat
 %endif # with_python3
 
+
 %changelog
+* Wed Mar 27 2019 Scott K Logan <logans@cottsay.net> - 0.7.3-1
+- Update to 0.7.3 (rhbz#1693483)
+- Switch to Python 3 Sphinx
+- Handle automatic dependency generation (f30+)
+- Make doc subpackage a weaker dependency
+
 * Wed Jan 23 2019 Scott K Logan <logans@cottsay.net> - 0.7.2-1
 - Update to 0.7.2 (rhbz#1668955)
 
