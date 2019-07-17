@@ -4,7 +4,7 @@
 %global srcname rosdistro
 
 Name:           python-%{srcname}
-Version:        0.7.3
+Version:        0.7.4
 Release:        1%{?dist}
 Summary:        File format for managing ROS Distributions
 
@@ -49,12 +49,12 @@ BuildRequires:  python2-rospkg
 BuildRequires:  python2-setuptools
 %{?python_provide:%python_provide python2-%{srcname}}
 
-%if %{undefined python_disable_dependency_generator}
+%if %{undefined __pythondist_requires}
 Requires:       python2-catkin_pkg
 Requires:       python2-pyyaml
 Requires:       python2-rospkg
 Requires:       python2-setuptools
-%endif # python_disable_dependency_generator
+%endif # __pythondist_requires
 
 %if 0%{?fedora}
 Suggests:       %{name}-doc = %{version}-%{release}
@@ -87,12 +87,12 @@ BuildRequires:  python%{python3_pkgversion}-rospkg
 BuildRequires:  python%{python3_pkgversion}-setuptools
 %{?python_provide:%python_provide python%{python3_pkgversion}-%{srcname}}
 
-%if %{undefined python_disable_dependency_generator}
+%if %{undefined __pythondist_requires}
 Requires:       python%{python3_pkgversion}-catkin_pkg
 Requires:       python%{python3_pkgversion}-PyYAML
 Requires:       python%{python3_pkgversion}-rospkg
 Requires:       python%{python3_pkgversion}-setuptools
-%endif # python_disable_dependency_generator
+%endif # __pythondist_requires
 
 %if 0%{?fedora}
 Suggests:       %{name}-doc = %{version}-%{release}
@@ -194,6 +194,9 @@ PYTHONPATH=%{buildroot}%{python3_sitelib} \
 
 
 %changelog
+* Wed Jul 17 2019 Scott K Logan <logans@cottsay.net> - 0.7.4-1
+- Update to 0.7.4 (rhbz#1702421)
+
 * Wed Mar 27 2019 Scott K Logan <logans@cottsay.net> - 0.7.3-1
 - Update to 0.7.3 (rhbz#1693483)
 - Switch to Python 3 Sphinx
