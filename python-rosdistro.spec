@@ -5,7 +5,7 @@
 
 Name:           python-%{srcname}
 Version:        0.7.4
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        File format for managing ROS Distributions
 
 License:        BSD and MIT
@@ -37,45 +37,8 @@ BuildRequires:  python%{python3_pkgversion}-sphinx
 HTML documentation for the '%{srcname}' python module
 
 
-%if 0%{?with_python2}
-%package -n python2-%{srcname}
-Summary:        %{summary}
-BuildRequires:  git
-BuildRequires:  python2-devel
-BuildRequires:  python2-catkin_pkg
-BuildRequires:  python2-nose
-BuildRequires:  python2-pyyaml
-BuildRequires:  python2-rospkg
-BuildRequires:  python2-setuptools
-%{?python_provide:%python_provide python2-%{srcname}}
-
-%if %{undefined __pythondist_requires}
-Requires:       python2-catkin_pkg
-Requires:       python2-pyyaml
-Requires:       python2-rospkg
-Requires:       python2-setuptools
-%endif # __pythondist_requires
-
-%if 0%{?fedora}
-Suggests:       %{name}-doc = %{version}-%{release}
-%endif # fedora
-
-%description -n python2-%{srcname}
-The rosdistro tool allows you to get access to the full dependency tree and
-the version control system information of all packages and repositories. To
-increase performance, the rosdistro tool will automatically look for a cache
-file on your local disk. If no cache file is found locally, it will try to
-download the latest cache file from the server. The cache files are only used
-to improve performance, and are not needed to get correct results. rosdistro
-will automatically go to Github to find any dependencies that are not part
-of the cache file. Note that operation without a cache file can be very slow,
-depending on your own internet connection and the response times of Github.
-The rosdistro tool will always write the latest dependency information to a
-local cache file, to speed up performance for the next query.
-%endif # with_python2
 
 
-%if 0%{?with_python3}
 %package -n python%{python3_pkgversion}-%{srcname}
 Summary:        %{summary}
 BuildRequires:  git
@@ -86,6 +49,7 @@ BuildRequires:  python%{python3_pkgversion}-PyYAML
 BuildRequires:  python%{python3_pkgversion}-rospkg
 BuildRequires:  python%{python3_pkgversion}-setuptools
 %{?python_provide:%python_provide python%{python3_pkgversion}-%{srcname}}
+Obsoletes:      python2-%{srcname} < 0.7.4-4
 
 %if %{undefined __pythondist_requires}
 Requires:       python%{python3_pkgversion}-catkin_pkg
@@ -110,7 +74,6 @@ of the cache file. Note that operation without a cache file can be very slow,
 depending on your own internet connection and the response times of Github.
 The rosdistro tool will always write the latest dependency information to a
 local cache file, to speed up performance for the next query.
-%endif # with_python3
 
 
 %prep
@@ -118,16 +81,7 @@ local cache file, to speed up performance for the next query.
 
 
 %build
-%if 0%{?with_python2}
-%py2_build
-%endif # with_python2
-
-%if 0%{?with_python3}
 %py3_build
-pushd build/scripts-%{python3_version}
-for f in *; do mv $f python%{python3_pkgversion}-$f; done
-popd
-%endif # with_python3
 
 PYTHONPATH=$PWD/src \
   %make_build -C doc html SPHINXBUILD=sphinx-build-%{python3_version} SPHINXAPIDOC=sphinx-apidoc-%{python3_version}
@@ -135,65 +89,51 @@ rm doc/_build/html/.buildinfo
 
 
 %install
-%if 0%{?with_python2}
-%py2_install
-%endif # with_python2
-
-%if 0%{?with_python3}
 %py3_install
-%endif # with_python3
+
+# backwards compatibility symbolic links
+pushd %{buildroot}%{_bindir}
+for i in *; do
+  ln -s ./$i python%{python3_pkgversion}-$i
+done
+popd
 
 
 %check
-%if 0%{?with_python2}
-PYTHONPATH=%{buildroot}%{python2_sitelib} \
-  %{__python2} -m nose \
-  -e test_get_index_from_http_with_query_parameters \
-  -e test_manifest_providers* \
-  test
-%endif # with_python2
-
-%if 0%{?with_python3}
 PYTHONPATH=%{buildroot}%{python3_sitelib} \
   %{__python3} -m nose \
   -e test_get_index_from_http_with_query_parameters \
   -e test_manifest_providers* \
   test
-%endif # with_python3
 
 
 %files doc
 %license LICENSE.txt
 %doc doc/_build/html
 
-%if 0%{?with_python2}
-%files -n python2-%{srcname}
-%license LICENSE.txt
-%doc README.md
-%{python2_sitelib}/%{srcname}/
-%{python2_sitelib}/%{srcname}-%{version}-py%{python2_version}.egg-info/
-%{_bindir}/rosdistro_build_cache
-%{_bindir}/rosdistro_freeze_source
-%{_bindir}/rosdistro_migrate_to_rep_141
-%{_bindir}/rosdistro_migrate_to_rep_143
-%{_bindir}/rosdistro_reformat
-%endif # with_python2
 
-%if 0%{?with_python3}
 %files -n python%{python3_pkgversion}-%{srcname}
 %license LICENSE.txt
 %doc README.md
 %{python3_sitelib}/%{srcname}/
 %{python3_sitelib}/%{srcname}-%{version}-py%{python3_version}.egg-info/
+%{_bindir}/rosdistro_build_cache
+%{_bindir}/rosdistro_freeze_source
+%{_bindir}/rosdistro_migrate_to_rep_141
+%{_bindir}/rosdistro_migrate_to_rep_143
+%{_bindir}/rosdistro_reformat
 %{_bindir}/python%{python3_pkgversion}-rosdistro_build_cache
 %{_bindir}/python%{python3_pkgversion}-rosdistro_freeze_source
 %{_bindir}/python%{python3_pkgversion}-rosdistro_migrate_to_rep_141
 %{_bindir}/python%{python3_pkgversion}-rosdistro_migrate_to_rep_143
 %{_bindir}/python%{python3_pkgversion}-rosdistro_reformat
-%endif # with_python3
 
 
 %changelog
+* Sat Sep 28 2019 Miro Hrončok <mhroncok@redhat.com> - 0.7.4-4
+- Subpackage python2-rosdistro has been removed
+  See https://fedoraproject.org/wiki/Changes/Mass_Python_2_Package_Removal
+
 * Mon Aug 19 2019 Miro Hrončok <mhroncok@redhat.com> - 0.7.4-3
 - Rebuilt for Python 3.8
 
