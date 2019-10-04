@@ -1,0 +1,5 @@
+# KNOWN BUGS
+addFilter(r'(file-not-utf8|wrong-file-end-of-line-encoding) /usr/share/doc/python-rosdistro-doc/html/objects.inv( |$)')
+
+# MANUAL PAGES
+addFilter(r'no-manual-page-for-binary (python\d*-)?rosdistro_.*')
