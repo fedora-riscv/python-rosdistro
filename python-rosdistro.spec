@@ -1,10 +1,10 @@
-%{?!_without_python2:%global with_python2 0%{?_with_python2:1} || !(0%{?rhel} >= 8)}
+%{?!_without_python2:%global with_python2 0%{?_with_python2:1} || !(0%{?fedora} >= 32 || 0%{?rhel} >= 8)}
 %{?!_without_python3:%global with_python3 0%{?_with_python3:1} || !0%{?rhel} || 0%{?rhel} >= 7}
 
 %global srcname rosdistro
 
 Name:           python-%{srcname}
-Version:        0.7.4
+Version:        0.7.5
 Release:        1%{?dist}
 Summary:        File format for managing ROS Distributions
 
@@ -56,9 +56,9 @@ Requires:       python2-rospkg
 Requires:       python2-setuptools
 %endif # __pythondist_requires
 
-%if 0%{?fedora}
+%if 0%{?fedora} || 0%{?rhel} >= 8
 Suggests:       %{name}-doc = %{version}-%{release}
-%endif # fedora
+%endif # fedora || rhel >= 8
 
 %description -n python2-%{srcname}
 The rosdistro tool allows you to get access to the full dependency tree and
@@ -94,9 +94,9 @@ Requires:       python%{python3_pkgversion}-rospkg
 Requires:       python%{python3_pkgversion}-setuptools
 %endif # __pythondist_requires
 
-%if 0%{?fedora}
+%if 0%{?fedora} || 0%{?rhel} >= 8
 Suggests:       %{name}-doc = %{version}-%{release}
-%endif # fedora
+%endif # fedora || rhel >= 8
 
 %description -n python%{python3_pkgversion}-%{srcname}
 The rosdistro tool allows you to get access to the full dependency tree and
@@ -194,6 +194,9 @@ PYTHONPATH=%{buildroot}%{python3_sitelib} \
 
 
 %changelog
+* Fri Oct 11 2019 Scott K Logan <logans@cottsay.net> - 0.7.5-1
+- Update to 0.7.5 (rhbz#1761003)
+
 * Wed Jul 17 2019 Scott K Logan <logans@cottsay.net> - 0.7.4-1
 - Update to 0.7.4 (rhbz#1702421)
 
