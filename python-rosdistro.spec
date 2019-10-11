@@ -1,11 +1,8 @@
-%{?!_without_python2:%global with_python2 0%{?_with_python2:1} || !(0%{?rhel} >= 8)}
-%{?!_without_python3:%global with_python3 0%{?_with_python3:1} || !0%{?rhel} || 0%{?rhel} >= 7}
-
 %global srcname rosdistro
 
 Name:           python-%{srcname}
-Version:        0.7.4
-Release:        4%{?dist}
+Version:        0.7.5
+Release:        1%{?dist}
 Summary:        File format for managing ROS Distributions
 
 License:        BSD and MIT
@@ -37,8 +34,6 @@ BuildRequires:  python%{python3_pkgversion}-sphinx
 HTML documentation for the '%{srcname}' python module
 
 
-
-
 %package -n python%{python3_pkgversion}-%{srcname}
 Summary:        %{summary}
 BuildRequires:  git
@@ -58,9 +53,9 @@ Requires:       python%{python3_pkgversion}-rospkg
 Requires:       python%{python3_pkgversion}-setuptools
 %endif # __pythondist_requires
 
-%if 0%{?fedora}
+%if 0%{?fedora} || 0%{?rhel} >= 8
 Suggests:       %{name}-doc = %{version}-%{release}
-%endif # fedora
+%endif # fedora || rhel >= 8
 
 %description -n python%{python3_pkgversion}-%{srcname}
 The rosdistro tool allows you to get access to the full dependency tree and
@@ -111,7 +106,6 @@ PYTHONPATH=%{buildroot}%{python3_sitelib} \
 %license LICENSE.txt
 %doc doc/_build/html
 
-
 %files -n python%{python3_pkgversion}-%{srcname}
 %license LICENSE.txt
 %doc README.md
@@ -130,6 +124,9 @@ PYTHONPATH=%{buildroot}%{python3_sitelib} \
 
 
 %changelog
+* Fri Oct 11 2019 Scott K Logan <logans@cottsay.net> - 0.7.5-1
+- Update to 0.7.5 (rhbz#1761003)
+
 * Sat Sep 28 2019 Miro Hrončok <mhroncok@redhat.com> - 0.7.4-4
 - Subpackage python2-rosdistro has been removed
   See https://fedoraproject.org/wiki/Changes/Mass_Python_2_Package_Removal
