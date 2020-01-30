@@ -2,7 +2,7 @@
 
 Name:           python-%{srcname}
 Version:        0.7.5
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        File format for managing ROS Distributions
 
 License:        BSD and MIT
@@ -124,6 +124,9 @@ PYTHONPATH=%{buildroot}%{python3_sitelib} \
 
 
 %changelog
+* Thu Jan 30 2020 Fedora Release Engineering <releng@fedoraproject.org> - 0.7.5-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
+
 * Fri Oct 11 2019 Scott K Logan <logans@cottsay.net> - 0.7.5-1
 - Update to 0.7.5 (rhbz#1761003)
 
