@@ -4,7 +4,7 @@
 %global srcname rosdistro
 
 Name:           python-%{srcname}
-Version:        0.7.5
+Version:        0.8.0
 Release:        1%{?dist}
 Summary:        File format for managing ROS Distributions
 
@@ -54,11 +54,11 @@ Requires:       python2-catkin_pkg
 Requires:       python2-pyyaml
 Requires:       python2-rospkg
 Requires:       python2-setuptools
-%endif # __pythondist_requires
+%endif
 
-%if 0%{?fedora} || 0%{?rhel} >= 8
+%if !0%{?rhel} || 0%{?rhel} >= 8
 Suggests:       %{name}-doc = %{version}-%{release}
-%endif # fedora || rhel >= 8
+%endif
 
 %description -n python2-%{srcname}
 The rosdistro tool allows you to get access to the full dependency tree and
@@ -72,7 +72,7 @@ of the cache file. Note that operation without a cache file can be very slow,
 depending on your own internet connection and the response times of Github.
 The rosdistro tool will always write the latest dependency information to a
 local cache file, to speed up performance for the next query.
-%endif # with_python2
+%endif
 
 
 %if 0%{?with_python3}
@@ -92,11 +92,11 @@ Requires:       python%{python3_pkgversion}-catkin_pkg
 Requires:       python%{python3_pkgversion}-PyYAML
 Requires:       python%{python3_pkgversion}-rospkg
 Requires:       python%{python3_pkgversion}-setuptools
-%endif # __pythondist_requires
+%endif
 
-%if 0%{?fedora} || 0%{?rhel} >= 8
+%if !0%{?rhel} || 0%{?rhel} >= 8
 Suggests:       %{name}-doc = %{version}-%{release}
-%endif # fedora || rhel >= 8
+%endif
 
 %description -n python%{python3_pkgversion}-%{srcname}
 The rosdistro tool allows you to get access to the full dependency tree and
@@ -110,7 +110,7 @@ of the cache file. Note that operation without a cache file can be very slow,
 depending on your own internet connection and the response times of Github.
 The rosdistro tool will always write the latest dependency information to a
 local cache file, to speed up performance for the next query.
-%endif # with_python3
+%endif
 
 
 %prep
@@ -120,14 +120,14 @@ local cache file, to speed up performance for the next query.
 %build
 %if 0%{?with_python2}
 %py2_build
-%endif # with_python2
+%endif
 
 %if 0%{?with_python3}
 %py3_build
 pushd build/scripts-%{python3_version}
 for f in *; do mv $f python%{python3_pkgversion}-$f; done
 popd
-%endif # with_python3
+%endif
 
 PYTHONPATH=$PWD/src \
   %make_build -C doc html SPHINXBUILD=sphinx-build-%{python3_version} SPHINXAPIDOC=sphinx-apidoc-%{python3_version}
@@ -137,11 +137,11 @@ rm doc/_build/html/.buildinfo
 %install
 %if 0%{?with_python2}
 %py2_install
-%endif # with_python2
+%endif
 
 %if 0%{?with_python3}
 %py3_install
-%endif # with_python3
+%endif
 
 
 %check
@@ -151,7 +151,7 @@ PYTHONPATH=%{buildroot}%{python2_sitelib} \
   -e test_get_index_from_http_with_query_parameters \
   -e test_manifest_providers* \
   test
-%endif # with_python2
+%endif
 
 %if 0%{?with_python3}
 PYTHONPATH=%{buildroot}%{python3_sitelib} \
@@ -159,7 +159,7 @@ PYTHONPATH=%{buildroot}%{python3_sitelib} \
   -e test_get_index_from_http_with_query_parameters \
   -e test_manifest_providers* \
   test
-%endif # with_python3
+%endif
 
 
 %files doc
@@ -177,7 +177,7 @@ PYTHONPATH=%{buildroot}%{python3_sitelib} \
 %{_bindir}/rosdistro_migrate_to_rep_141
 %{_bindir}/rosdistro_migrate_to_rep_143
 %{_bindir}/rosdistro_reformat
-%endif # with_python2
+%endif
 
 %if 0%{?with_python3}
 %files -n python%{python3_pkgversion}-%{srcname}
@@ -190,10 +190,13 @@ PYTHONPATH=%{buildroot}%{python3_sitelib} \
 %{_bindir}/python%{python3_pkgversion}-rosdistro_migrate_to_rep_141
 %{_bindir}/python%{python3_pkgversion}-rosdistro_migrate_to_rep_143
 %{_bindir}/python%{python3_pkgversion}-rosdistro_reformat
-%endif # with_python3
+%endif
 
 
 %changelog
+* Wed Apr 15 2020 Scott K Logan <logans@cottsay.net> - 0.8.0-1
+- Update to 0.8.0 (rhbz#1782354)
+
 * Fri Oct 11 2019 Scott K Logan <logans@cottsay.net> - 0.7.5-1
 - Update to 0.7.5 (rhbz#1761003)
 
