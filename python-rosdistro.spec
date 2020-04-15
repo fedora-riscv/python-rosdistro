@@ -1,8 +1,8 @@
 %global srcname rosdistro
 
 Name:           python-%{srcname}
-Version:        0.7.5
-Release:        2%{?dist}
+Version:        0.8.0
+Release:        1%{?dist}
 Summary:        File format for managing ROS Distributions
 
 License:        BSD and MIT
@@ -51,11 +51,11 @@ Requires:       python%{python3_pkgversion}-catkin_pkg
 Requires:       python%{python3_pkgversion}-PyYAML
 Requires:       python%{python3_pkgversion}-rospkg
 Requires:       python%{python3_pkgversion}-setuptools
-%endif # __pythondist_requires
+%endif
 
-%if 0%{?fedora} || 0%{?rhel} >= 8
+%if !0%{?rhel} || 0%{?rhel} >= 8
 Suggests:       %{name}-doc = %{version}-%{release}
-%endif # fedora || rhel >= 8
+%endif
 
 %description -n python%{python3_pkgversion}-%{srcname}
 The rosdistro tool allows you to get access to the full dependency tree and
@@ -124,6 +124,9 @@ PYTHONPATH=%{buildroot}%{python3_sitelib} \
 
 
 %changelog
+* Wed Apr 15 2020 Scott K Logan <logans@cottsay.net> - 0.8.0-1
+- Update to 0.8.0 (rhbz#1782354)
+
 * Thu Jan 30 2020 Fedora Release Engineering <releng@fedoraproject.org> - 0.7.5-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
 
