@@ -4,7 +4,7 @@
 %global srcname rosdistro
 
 Name:           python-%{srcname}
-Version:        0.8.0
+Version:        0.8.1
 Release:        1%{?dist}
 Summary:        File format for managing ROS Distributions
 
@@ -194,6 +194,9 @@ PYTHONPATH=%{buildroot}%{python3_sitelib} \
 
 
 %changelog
+* Sat May 09 2020 Scott K Logan <logans@cottsay.net> - 0.8.1-1
+- Update to 0.8.1 (rhbz#1824379)
+
 * Wed Apr 15 2020 Scott K Logan <logans@cottsay.net> - 0.8.0-1
 - Update to 0.8.0 (rhbz#1782354)
 
