@@ -27,6 +27,7 @@ local cache file, to speed up performance for the next query.
 
 %package doc
 Summary:        HTML documentation for '%{name}'
+BuildRequires: make
 BuildRequires:  python%{python3_pkgversion}-catkin-sphinx
 BuildRequires:  python%{python3_pkgversion}-sphinx
 
