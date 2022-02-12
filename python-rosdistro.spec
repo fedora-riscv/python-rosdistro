@@ -9,6 +9,10 @@ License:        BSD and MIT
 URL:            http://www.ros.org/wiki/rosdistro
 Source0:        https://github.com/ros-infrastructure/%{srcname}/archive/%{version}/%{srcname}-%{version}.tar.gz
 
+# Apply upstream patch to use yaml safe_load
+# https://github.com/ros-infrastructure/rosdistro/commit/40695e0dae1ede0271bf3ff38c0f1739dac33a8b.patch
+Patch0:         40695e0dae1ede0271bf3ff38c0f1739dac33a8b.patch
+
 BuildArch:      noarch
 
 %description
@@ -125,6 +129,9 @@ PYTHONPATH=%{buildroot}%{python3_sitelib} \
 
 
 %changelog
+* Sat Feb 12 2022 Rich Mattes <richmattes@gmail.com> - 0.8.3-5
+- Apply upstream patch to use yaml safe_load (rhbz#2046910)
+
 * Fri Jan 21 2022 Fedora Release Engineering <releng@fedoraproject.org> - 0.8.3-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_36_Mass_Rebuild
 
