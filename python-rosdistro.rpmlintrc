@@ -1,8 +1,1 @@
-# KNOWN BUGS
-addFilter(r'(file-not-utf8|wrong-file-end-of-line-encoding) /usr/share/doc/python-rosdistro-doc/html/objects.inv( |$)')
-
-# FALSE POSITIVES
-addFilter(r': obsolete-not-provided python\d*-rosdistro')
-
-# MANUAL PAGES
 addFilter(r'no-manual-page-for-binary (python\d*-)?rosdistro_.*')
