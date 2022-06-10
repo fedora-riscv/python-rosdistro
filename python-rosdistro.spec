@@ -1,17 +1,13 @@
 %global srcname rosdistro
 
 Name:           python-%{srcname}
-Version:        0.8.3
-Release:        5%{?dist}
+Version:        0.9.0
+Release:        1%{?dist}
 Summary:        File format for managing ROS Distributions
 
 License:        BSD and MIT
 URL:            http://www.ros.org/wiki/rosdistro
 Source0:        https://github.com/ros-infrastructure/%{srcname}/archive/%{version}/%{srcname}-%{version}.tar.gz
-
-# Apply upstream patch to use yaml safe_load
-# https://github.com/ros-infrastructure/rosdistro/commit/40695e0dae1ede0271bf3ff38c0f1739dac33a8b.patch
-Patch0:         40695e0dae1ede0271bf3ff38c0f1739dac33a8b.patch
 
 BuildArch:      noarch
 
@@ -31,7 +27,7 @@ local cache file, to speed up performance for the next query.
 
 %package doc
 Summary:        HTML documentation for '%{name}'
-BuildRequires: make
+BuildRequires:  make
 BuildRequires:  python%{python3_pkgversion}-catkin-sphinx
 BuildRequires:  python%{python3_pkgversion}-sphinx
 
@@ -44,7 +40,7 @@ Summary:        %{summary}
 BuildRequires:  git
 BuildRequires:  python%{python3_pkgversion}-catkin_pkg
 BuildRequires:  python%{python3_pkgversion}-devel
-BuildRequires:  python%{python3_pkgversion}-nose
+BuildRequires:  python%{python3_pkgversion}-pytest
 BuildRequires:  python%{python3_pkgversion}-PyYAML
 BuildRequires:  python%{python3_pkgversion}-rospkg
 BuildRequires:  python%{python3_pkgversion}-setuptools
@@ -79,6 +75,9 @@ local cache file, to speed up performance for the next query.
 %prep
 %autosetup -p1 -n %{srcname}-%{version}
 
+# Drop unsupported syntax in older setuptools
+sed -i "s/mock; python_version < '3.3'//" setup.py
+
 
 %build
 %py3_build
@@ -101,9 +100,8 @@ popd
 
 %check
 PYTHONPATH=%{buildroot}%{python3_sitelib} \
-  %{__python3} -m nose \
-  -e test_get_index_from_http_with_query_parameters \
-  -e test_manifest_providers* \
+  %{__python3} -m pytest \
+  -k 'not test_manifest_providers' \
   test
 
 
@@ -129,6 +127,10 @@ PYTHONPATH=%{buildroot}%{python3_sitelib} \
 
 
 %changelog
+* Fri Jun 10 2022 Scott K Logan <logans@cottsay.net> - 0.9.0-1
+- Update to 0.9.0 (rhbz#2095797)
+- Re-enable test_get_index_from_http_with_query_parameters
+
 * Sat Feb 12 2022 Rich Mattes <richmattes@gmail.com> - 0.8.3-5
 - Apply upstream patch to use yaml safe_load (rhbz#2046910)
 
