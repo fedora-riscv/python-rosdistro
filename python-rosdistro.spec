@@ -4,7 +4,7 @@
 %global srcname rosdistro
 
 Name:           python-%{srcname}
-Version:        0.8.3
+Version:        0.9.0
 Release:        1%{?dist}
 Summary:        File format for managing ROS Distributions
 
@@ -30,6 +30,7 @@ local cache file, to speed up performance for the next query.
 
 %package doc
 Summary:        HTML documentation for '%{name}'
+BuildRequires:  make
 BuildRequires:  python%{python3_pkgversion}-catkin-sphinx
 BuildRequires:  python%{python3_pkgversion}-sphinx
 
@@ -43,7 +44,8 @@ Summary:        %{summary}
 BuildRequires:  git
 BuildRequires:  python2-devel
 BuildRequires:  python2-catkin_pkg
-BuildRequires:  python2-nose
+BuildRequires:  python2-mock
+BuildRequires:  python2-pytest
 BuildRequires:  python2-pyyaml
 BuildRequires:  python2-rospkg
 BuildRequires:  python2-setuptools
@@ -81,7 +83,7 @@ Summary:        %{summary}
 BuildRequires:  git
 BuildRequires:  python%{python3_pkgversion}-catkin_pkg
 BuildRequires:  python%{python3_pkgversion}-devel
-BuildRequires:  python%{python3_pkgversion}-nose
+BuildRequires:  python%{python3_pkgversion}-pytest
 BuildRequires:  python%{python3_pkgversion}-PyYAML
 BuildRequires:  python%{python3_pkgversion}-rospkg
 BuildRequires:  python%{python3_pkgversion}-setuptools
@@ -116,6 +118,9 @@ local cache file, to speed up performance for the next query.
 %prep
 %autosetup -p1 -n %{srcname}-%{version}
 
+# Drop unsupported syntax in older setuptools
+sed -i "s/mock; python_version < '3.3'//" setup.py
+
 
 %build
 %if 0%{?with_python2}
@@ -147,17 +152,15 @@ rm doc/_build/html/.buildinfo
 %check
 %if 0%{?with_python2}
 PYTHONPATH=%{buildroot}%{python2_sitelib} \
-  %{__python2} -m nose \
-  -e test_get_index_from_http_with_query_parameters \
-  -e test_manifest_providers* \
+  %{__python2} -m pytest \
+  -k 'not test_manifest_providers' \
   test
 %endif
 
 %if 0%{?with_python3}
 PYTHONPATH=%{buildroot}%{python3_sitelib} \
-  %{__python3} -m nose \
-  -e test_get_index_from_http_with_query_parameters \
-  -e test_manifest_providers* \
+  %{__python3} -m pytest \
+  -k 'not test_manifest_providers' \
   test
 %endif
 
@@ -194,6 +197,10 @@ PYTHONPATH=%{buildroot}%{python3_sitelib} \
 
 
 %changelog
+* Fri Jun 10 2022 Scott K Logan <logans@cottsay.net> - 0.9.0-1
+- Update to 0.9.0 (rhbz#2095797)
+- Re-enable test_get_index_from_http_with_query_parameters
+
 * Wed Sep 30 2020 Scott K Logan <logans@cottsay.net> - 0.8.3-1
 - Update to 0.8.3 (rhbz#1883374)
 
