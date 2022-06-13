@@ -2,7 +2,7 @@
 
 Name:           python-%{srcname}
 Version:        0.9.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        File format for managing ROS Distributions
 
 License:        BSD and MIT
@@ -127,6 +127,9 @@ PYTHONPATH=%{buildroot}%{python3_sitelib} \
 
 
 %changelog
+* Mon Jun 13 2022 Python Maint <python-maint@redhat.com> - 0.9.0-2
+- Rebuilt for Python 3.11
+
 * Fri Jun 10 2022 Scott K Logan <logans@cottsay.net> - 0.9.0-1
 - Update to 0.9.0 (rhbz#2095797)
 - Re-enable test_get_index_from_http_with_query_parameters
