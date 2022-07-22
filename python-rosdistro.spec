@@ -2,7 +2,7 @@
 
 Name:           python-%{srcname}
 Version:        0.9.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        File format for managing ROS Distributions
 
 License:        BSD and MIT
@@ -127,6 +127,9 @@ PYTHONPATH=%{buildroot}%{python3_sitelib} \
 
 
 %changelog
+* Fri Jul 22 2022 Fedora Release Engineering <releng@fedoraproject.org> - 0.9.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_37_Mass_Rebuild
+
 * Mon Jun 13 2022 Python Maint <python-maint@redhat.com> - 0.9.0-2
 - Rebuilt for Python 3.11
 
