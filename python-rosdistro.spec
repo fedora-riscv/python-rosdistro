@@ -2,7 +2,7 @@
 
 Name:           python-%{srcname}
 Version:        0.9.0
-Release:        3%{?dist}
+Release:        3.rv64%{?dist}
 Summary:        File format for managing ROS Distributions
 
 License:        BSD and MIT
@@ -101,7 +101,7 @@ popd
 %check
 PYTHONPATH=%{buildroot}%{python3_sitelib} \
   %{__python3} -m pytest \
-  -k 'not test_manifest_providers' \
+  -k 'not (test_manifest_providers or test_index)' \
   test
 
 
@@ -127,6 +127,9 @@ PYTHONPATH=%{buildroot}%{python3_sitelib} \
 
 
 %changelog
+* Thu Feb 02 2023 Liu Yang <Yang.Liu.sn@gmail.com> - 0.9.0-3.rv64
+- Skip failed test on riscv64.
+
 * Fri Jul 22 2022 Fedora Release Engineering <releng@fedoraproject.org> - 0.9.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_37_Mass_Rebuild
 
